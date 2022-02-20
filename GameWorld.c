@@ -9,7 +9,7 @@ game_world_t *new_game_world()
 {
     game_world_t *gw = (game_world_t*)calloc(sizeof(game_world_t), 1);
     gw->game_objects = (game_object_t**) malloc(sizeof(game_object_t*) * (gw->size_game_objects = 1));
-
+    gw->update = NULL;
     return gw;
 }
 

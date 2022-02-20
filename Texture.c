@@ -13,8 +13,9 @@ texture_t *new_texture(char *path)
     if (!t->texture)
     {
         free(t);
-        return (texture_t*)(printf("Error loading texture \"%s\"\n", path) && 0);
+        return (texture_t*)(uint64_t)(printf("Error loading texture \"%s\"\n", path) && 0);
     }
+    return t;
 }
 
 void destroy_texture(texture_t *t)
@@ -25,7 +26,7 @@ void destroy_texture(texture_t *t)
 
 void use_texture(texture_t *t, shader_t *s)
 {
-    int32_t texpath = get_uniform_address(s, "texture");
+    int32_t texpath = glGetAttribLocation(s->shader_program, "texture_add");
     glUniform1i(texpath, t->texture);
 
     glActiveTexture(GL_TEXTURE0);

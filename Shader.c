@@ -25,9 +25,9 @@ shader_t *new_shader(char *vertex, char *fragment)
 {
     // Reading vertex and fragment shaders
     char *vertex_shader = read_file(vertex);
-    if (!vertex_shader) return (shader_t*)(printf("Error reading vertex shader \"%s\"!\n", vertex) && 0);
+    if (!vertex_shader) return (shader_t*)(uint64_t)(printf("Error reading vertex shader \"%s\"!\n", vertex) && 0);
     char *fragment_shader = read_file(fragment);
-    if (!fragment_shader) return (shader_t*)(printf("Error reading fragment shader shader \"%s\"!\n", fragment) && 0);
+    if (!fragment_shader) return (shader_t*)(uint64_t)(printf("Error reading fragment shader shader \"%s\"!\n", fragment) && 0);
 
     // Variables to check status of compilation of the shaders
     uint32_t size_message = 500;
@@ -36,7 +36,7 @@ shader_t *new_shader(char *vertex, char *fragment)
 
     // Compiling the vertex shader
     uint32_t vert = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vert, 1, &vertex_shader, (int*)0);
+    glShaderSource(vert, 1, (const char**)(&vertex_shader), (int*)0);
     glCompileShader(vert);
     
 
@@ -44,20 +44,20 @@ shader_t *new_shader(char *vertex, char *fragment)
     if (!success)
     {
         glGetShaderInfoLog(vert, size_message, (int*)0, shader_compile_message);
-        printf("Error compiling vertex shader:\n%s\n", size_message);
+        printf("Error compiling vertex shader:\n%s\n", shader_compile_message);
     }
 
     // Compiling the fragment shader
 
     uint32_t frag = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(frag, 1, &fragment_shader, (int*)0);
+    glShaderSource(frag, 1, (const char**)(&fragment_shader), (int*)0);
     glCompileShader(frag);
 
     glGetShaderiv(frag, GL_COMPILE_STATUS, &success);
     if (!success)
     {
         glGetShaderInfoLog(frag, size_message, (int*)0, shader_compile_message);
-        printf("Error compiling fragment shader:\n%s\n", size_message);
+        printf("Error compiling fragment shader:\n%s\n", shader_compile_message);
     }
 
     // Creating the shader and linking them
@@ -83,6 +83,16 @@ shader_t *new_shader(char *vertex, char *fragment)
     free(fragment_shader);
     free(shader_compile_message);
 
+    int32_t att_location = glGetAttribLocation(shader->shader_program, "vertex");
+    glVertexAttribPointer(att_location, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(att_location);
+
+    att_location = 0;
+
+    att_location = glGetAttribLocation(shader->shader_program, "uv");
+    glVertexAttribPointer(att_location, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(sizeof(float) * 2));
+    glEnableVertexAttribArray(att_location);
+
     return shader;
 
 }
@@ -94,7 +104,7 @@ void use_shader(shader_t *s)
 
 int32_t get_uniform_address(shader_t *s, char *name)
 {
-    return glGetAttribLocation(s->shader_program, name);
+    return glGetUniformLocation(s->shader_program, name);
 }
 
 void stop_using_shader()
