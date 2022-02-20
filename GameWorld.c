@@ -26,7 +26,8 @@ void render_game_world(game_world_t *gw, camera_t *c)
 
 void handle_game_world(game_world_t *gw, int32_t type_event, int32_t key)
 {
-    for (uintmax_t i = 0; i < gw->game_objects_n; ++i) 
+    for (uintmax_t i = 0; i < gw->game_objects_n; ++i)
+        if (gw->game_objects[i]->handle)
         gw->game_objects[i]->handle(gw->game_objects[i], type_event, key);
 }
 
@@ -48,5 +49,16 @@ void add_game_object_game_world(game_world_t *gw, game_object_t *go)
 
 game_object_t *remove_game_object_game_world(game_world_t *gw, uintmax_t index)
 {
-    return (game_object_t*)0;
+    game_object_t *go = gw->game_objects[index];
+
+    for (uintmax_t i = index; i < gw->game_objects_n - 1; ++i)
+    {
+        gw->game_objects[i] = gw->game_objects[i + 1];
+    }
+
+    (gw->game_objects_n)--;
+
+    if (gw->size_game_objects / 2 > gw->game_objects_n)
+        gw->game_objects = (game_object_t**)realloc(gw->game_objects, sizeof(game_object_t*) * (gw->size_game_objects /= 2));
+    return go;
 }

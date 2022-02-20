@@ -5,6 +5,14 @@
 #include <stdlib.h>
 
 void on_resize(GLFWwindow *win, int width, int height);
+void on_key_callback(GLFWwindow *win, int key, int scancode, int action, int mods);
+void on_mouse_callback(GLFWwindow *win, int key, int action, int mods);
+void mouse_pos_callback(GLFWwindow *win, double x, double y);
+
+struct mouse_position
+{
+    double x, y;
+};
 
 game_t *new_game(uint16_t width, uint16_t height, char *title)
 {
@@ -44,6 +52,11 @@ game_t *new_game(uint16_t width, uint16_t height, char *title)
 
     glfwSetFramebufferSizeCallback(game->game_window, on_resize);
 
+    glfwSetKeyCallback(game->game_window, on_key_callback);
+    glfwSetMouseButtonCallback(game->game_window, on_mouse_callback);
+    game->mp = (struct mouse_position*)calloc(sizeof(struct mouse_position), 1);
+    glfwSetCursorPosCallback(game->game_window, mouse_pos_callback);
+
     return game;
 }
 
@@ -77,10 +90,55 @@ void destroy_game(game_t *g)
     destroy_game_world(g->game_world);
     destroy_camera(g->camera);
     glfwDestroyWindow(g->game_window);
+    free(g->mp);
     glfwTerminate();
 }
 
 void on_resize(GLFWwindow *win, int width, int height)
 {
     glViewport(0, 0, width, height);
+}
+
+void on_key_callback(GLFWwindow *win, int key, int scancode, int action, int mods)
+{
+    game_t *game = (game_t*)glfwGetWindowUserPointer(win);
+    int32_t ac = action == GLFW_RELEASE ? KEY_RELEASED : KEY_PRESSED;
+
+    if (game->game_world)
+    {
+        handle_game_world(game->game_world, ac, key);
+    }
+}
+
+void on_mouse_callback(GLFWwindow *win, int key, int action, int mods)
+{
+    game_t *game = (game_t*)glfwGetWindowUserPointer(win);
+    int32_t ac = action == GLFW_RELEASE ? MOUSE_RELEASED : MOUSE_PRESSED;
+
+    if (game->game_world)
+    {
+        handle_game_world(game->game_world, ac, key);
+    }
+}
+
+void mouse_pos_callback(GLFWwindow *win, double x, double y)
+{
+    int width, height;
+    glfwGetWindowSize(win, &width, &height);
+    double mouse_x = (x / width) - 0.5;
+    double mouse_y = 1.0 - (y / height) - 0.5;
+
+    game_t *game = (game_t*)glfwGetWindowUserPointer(win);
+    game->mp->x = mouse_x;
+    game->mp->y = mouse_y;
+}
+
+double mouse_x_rel(game_t *g)
+{
+    return g->mp->x;
+}
+
+double mouse_y_rel(game_t *g)
+{
+    return g->mp->y;
 }
