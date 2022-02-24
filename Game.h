@@ -30,5 +30,7 @@ void destroy_game(game_t*);
 double mouse_x_rel(game_t*);
 double mouse_y_rel(game_t*);
 
+extern game_t *game;
+
 
 #endif

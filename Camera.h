@@ -7,10 +7,10 @@ typedef struct camera
     float scale;
 }camera_t;
 
-float *create_camera_mat4(camera_t*); // done
+float *create_camera_mat4(camera_t*);
 
-camera_t *new_camera(); // done
+camera_t *new_camera();
 
-void destroy_camera(camera_t*); // done
+void destroy_camera(camera_t*);
 
 #endif

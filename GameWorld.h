@@ -8,6 +8,7 @@ typedef struct game_world
     game_object_t **game_objects;
     uintmax_t size_game_objects, game_objects_n;
     void (*update)(struct game_world*);
+    void (*free_self)(struct game_world*);
 }game_world_t;
 
 
@@ -22,5 +23,7 @@ void destroy_game_world(game_world_t*);
 void add_game_object_game_world(game_world_t*, game_object_t*);
 
 game_object_t *remove_game_object_game_world(game_world_t*, uintmax_t);
+
+void game_world_update_all_game_objects(game_world_t*);
 
 #endif

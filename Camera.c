@@ -6,7 +6,7 @@ camera_t *new_camera()
 {
     camera_t *cam = (camera_t*)malloc(sizeof(camera_t));
     memset(cam->position, 0, sizeof(float) * 2);
-    cam->scale = 0.1f;
+    cam->scale = 0.02f;
     return cam;
 }
 
@@ -17,6 +17,8 @@ float *create_camera_mat4(camera_t *cam)
     camera_mat[0] = cam->scale;
     camera_mat[5] = cam->scale;
     camera_mat[10] = cam->scale;
+    camera_mat[12] = -(cam->position[0]);
+    camera_mat[13] = -(cam->position[1]);
     camera_mat[15] = 1.0f;
     return camera_mat;
 }

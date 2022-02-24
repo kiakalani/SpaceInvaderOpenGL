@@ -4,12 +4,21 @@
 #include <stdlib.h>
 #include <GL/glew.h>
 
+void game_world_update_all_game_objects(game_world_t *gw)
+{
+    for (intmax_t i = gw->game_objects_n - 1; i > -1; --i)
+    {
+        if (gw->game_objects[i]->update)
+            gw->game_objects[i]->update(gw->game_objects[i]);
+    }
+}
 
 game_world_t *new_game_world()
 {
     game_world_t *gw = (game_world_t*)calloc(sizeof(game_world_t), 1);
     gw->game_objects = (game_object_t**) malloc(sizeof(game_object_t*) * (gw->size_game_objects = 1));
-    gw->update = NULL;
+    gw->update = game_world_update_all_game_objects;
+    gw->free_self = destroy_game_world;
     return gw;
 }
 
@@ -62,3 +71,5 @@ game_object_t *remove_game_object_game_world(game_world_t *gw, uintmax_t index)
         gw->game_objects = (game_object_t**)realloc(gw->game_objects, sizeof(game_object_t*) * (gw->size_game_objects /= 2));
     return go;
 }
+
+
