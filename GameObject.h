@@ -19,7 +19,7 @@ typedef struct game_object
     struct texture *texture;
 
     void (*render)(struct game_object*, float*);
-    void (*handle)(struct game_object*, int32_t, int32_t);
+    char (*handle)(struct game_object*, int32_t, int32_t);
     void (*update)(struct game_object*);
 
     void (*free_self)(struct game_object*);
@@ -28,5 +28,6 @@ typedef struct game_object
 game_object_t *new_game_object(shape_t*, shader_t*, texture_t*);
 
 void destroy_game_object(game_object_t*);
+void game_object_free_self(game_object_t *g);
 
 #endif

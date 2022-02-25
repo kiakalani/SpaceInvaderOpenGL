@@ -88,7 +88,7 @@ void destroy_game(game_t *g)
 {
     if (g->game_world)
         g->game_world->free_self(g->game_world);
-    //destroy_game_world(g->game_world);
+    
     destroy_camera(g->camera);
     glfwDestroyWindow(g->game_window);
     free(g->mp);

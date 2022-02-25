@@ -1,9 +1,10 @@
-OBJ = Camera.o Game.o GameObject.o GameWorld.o Main.o Shader.o Shape.o Texture.o #MainMenu.o
+OBJ = Camera.o Game.o GameObject.o GameWorld.o Main.o Shader.o Shape.o Texture.o MainMenu.o GamePage.o\
+	Bullet.o Enemy.o
 PROJ_NAME = SpaceInvaderOpenGL
 LIBS = -lglfw -ldl -lpthread -lX11 -lGLEW -lm -lGL -lSOIL
 
 all: $(OBJ)
-	gcc -o $(PROJ_NAME) $(OBJ) $(LIBS)
+	gcc -o $(PROJ_NAME) $(OBJ) $(LIBS) -Wall
 clean:
 	rm -f $(OBJ) $(PROJ_NAME)
 
@@ -33,3 +34,12 @@ Texture.o: ../Texture.h ../Texture.c
 
 MainMenu.o: ../SpaceInvaderGame/MainMenu.h ../SpaceInvaderGame/MainMenu.c ../GameWorld.h
 	gcc -c ../SpaceInvaderGame/MainMenu.c
+
+GamePage.o: ../SpaceInvaderGame/GamePage.h ../SpaceInvaderGame/GamePage.c ../GameWorld.h
+	gcc -c ../SpaceInvaderGame/GamePage.c
+
+Bullet.o: ../SpaceInvaderGame/Bullet.h ../SpaceInvaderGame/Bullet.c ../GameObject.h
+	gcc -c ../SpaceInvaderGame/Bullet.c
+
+Enemy.o: ../SpaceInvaderGame/Enemy.h ../SpaceInvaderGame/Enemy.c ../GameObject.h
+	gcc -c ../SpaceInvaderGame/Enemy.c

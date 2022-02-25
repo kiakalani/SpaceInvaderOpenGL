@@ -8,6 +8,8 @@ void game_world_update_all_game_objects(game_world_t *gw)
 {
     for (intmax_t i = gw->game_objects_n - 1; i > -1; --i)
     {
+        if (i > gw->game_objects_n - 1) i = gw->game_objects_n - 1;
+        if (i < 0) return;
         if (gw->game_objects[i]->update)
             gw->game_objects[i]->update(gw->game_objects[i]);
     }
@@ -17,6 +19,7 @@ game_world_t *new_game_world()
 {
     game_world_t *gw = (game_world_t*)calloc(sizeof(game_world_t), 1);
     gw->game_objects = (game_object_t**) malloc(sizeof(game_object_t*) * (gw->size_game_objects = 1));
+    gw->game_objects_n = 0;
     gw->update = game_world_update_all_game_objects;
     gw->free_self = destroy_game_world;
     return gw;
@@ -37,15 +40,18 @@ void handle_game_world(game_world_t *gw, int32_t type_event, int32_t key)
 {
     for (uintmax_t i = 0; i < gw->game_objects_n; ++i)
         if (gw->game_objects[i]->handle)
-        gw->game_objects[i]->handle(gw->game_objects[i], type_event, key);
+        if(gw->game_objects[i]->handle(gw->game_objects[i], type_event, key)) return;
 }
 
 void destroy_game_world(game_world_t *gw)
 {
     for (uintmax_t i = 0; i < gw->game_objects_n; ++i)
         destroy_game_object(gw->game_objects[i]);
+
     free(gw->game_objects);
+
     free(gw);
+
 }
 
 void add_game_object_game_world(game_world_t *gw, game_object_t *go)
@@ -67,9 +73,16 @@ game_object_t *remove_game_object_game_world(game_world_t *gw, uintmax_t index)
 
     (gw->game_objects_n)--;
 
-    if (gw->size_game_objects / 2 > gw->game_objects_n)
-        gw->game_objects = (game_object_t**)realloc(gw->game_objects, sizeof(game_object_t*) * (gw->size_game_objects /= 2));
+    // if (gw->size_game_objects / 2 > gw->game_objects_n && gw->size_game_objects / 2 > 1)
+    //     gw->game_objects = (game_object_t**)realloc(gw->game_objects, sizeof(game_object_t*) * ((gw->size_game_objects /= 2)+1));
     return go;
+}
+
+game_object_t *remove_game_object_game_world_by_item(game_world_t *world, game_object_t *obj)
+{
+    for (intmax_t i = 0; i < world->game_objects_n; ++i)
+        if (world->game_objects[i] == obj) 
+            return remove_game_object_game_world(world, i);
 }
 
 
