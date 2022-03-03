@@ -34,7 +34,7 @@ void game_object_render(game_object_t *g, float *camera)
 {
     if (!g->texture || !g->shape || !g->shader) return;
     use_shader(g->shader);
-    use_shape(g->shape, g->shader);
+    use_shape(g->shape);
     use_texture(g->texture, g->shader);
 
     int32_t mat_add = get_uniform_address(g->shader, "camera_matrix");

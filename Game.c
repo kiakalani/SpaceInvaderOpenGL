@@ -3,7 +3,7 @@
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 #include <stdlib.h>
-
+// The callback functions for different types of callbacks.
 void on_resize(GLFWwindow *win, int width, int height);
 void on_key_callback(GLFWwindow *win, int key, int scancode, int action, int mods);
 void on_mouse_callback(GLFWwindow *win, int key, int action, int mods);
@@ -16,14 +16,14 @@ struct mouse_position
 
 game_t *new_game(uint16_t width, uint16_t height, char *title)
 {
-    if (!glfwInit())
+    if (!glfwInit()) // Initializing the glfw library
     {
         glfwTerminate();
         return (game_t*)(uint64_t)(printf("Error initializing GLFW\n") && 0);
     }
 
     game_t *game = (game_t*)calloc(sizeof(game_t), 1);
-    game->game_window = glfwCreateWindow(width, height, title, NULL, NULL);
+    game->game_window = glfwCreateWindow(width, height, title, NULL, NULL); // Creates the window
 
     if (!game->game_window)
     {
@@ -34,7 +34,7 @@ game_t *new_game(uint16_t width, uint16_t height, char *title)
 
     glfwMakeContextCurrent(game->game_window);
     glewExperimental = 1;
-    if (glewInit() != GLEW_OK)
+    if (glewInit() != GLEW_OK) // Initializing the GLEW library
     {
         glfwTerminate();
         free(game);
@@ -48,9 +48,9 @@ game_t *new_game(uint16_t width, uint16_t height, char *title)
 
     glViewport(0, 0, (int)width, (int)height);
 
-    glfwSetWindowUserPointer(game->game_window, (void*)game);
+    glfwSetWindowUserPointer(game->game_window, (void*)game); // Sending game to glfw library
 
-    glfwSetFramebufferSizeCallback(game->game_window, on_resize);
+    glfwSetFramebufferSizeCallback(game->game_window, on_resize); 
 
     glfwSetKeyCallback(game->game_window, on_key_callback);
     glfwSetMouseButtonCallback(game->game_window, on_mouse_callback);
@@ -62,7 +62,7 @@ game_t *new_game(uint16_t width, uint16_t height, char *title)
 
 void execute_game(game_t *g)
 {
-    while (!glfwWindowShouldClose(g->game_window))
+    while (!glfwWindowShouldClose(g->game_window)) // Game main loop
     {
         float current_time = glfwGetTime();
         
@@ -84,7 +84,7 @@ void execute_game(game_t *g)
     }
 }
 
-void destroy_game(game_t *g)
+void destroy_game(game_t *g) 
 {
     if (g->game_world)
         g->game_world->free_self(g->game_world);

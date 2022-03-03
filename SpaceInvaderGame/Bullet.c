@@ -42,6 +42,7 @@ void bullet_update(game_object_t *b)
     {
         game_object_t *enemy = gpcomps->enemies[i];
         if (!enemy) continue;
+        // Collision detection
         if (enemy->position[0] - enemy->scale[0] * 0.5 < b->position[0] + b->scale[0] * 0.5&&
             enemy->position[0] + enemy->scale[0] * 0.5 > b->position[0] - b->scale[0] * 0.5)
         if (enemy->position[1] - enemy->scale[1] * 0.5 < b->position[1] + b->scale[1] * 0.5&&
@@ -57,6 +58,7 @@ void bullet_update(game_object_t *b)
     }
 
     b->position[1] += 0.3f;
+    b->rotation += 3.14f / 90.0f;
 }
 
 extern void game_object_free_self(game_object_t*);

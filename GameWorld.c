@@ -73,8 +73,7 @@ game_object_t *remove_game_object_game_world(game_world_t *gw, uintmax_t index)
 
     (gw->game_objects_n)--;
 
-    // if (gw->size_game_objects / 2 > gw->game_objects_n && gw->size_game_objects / 2 > 1)
-    //     gw->game_objects = (game_object_t**)realloc(gw->game_objects, sizeof(game_object_t*) * ((gw->size_game_objects /= 2)+1));
+
     return go;
 }
 

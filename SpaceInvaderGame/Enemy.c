@@ -34,6 +34,7 @@ void enemy_update(game_object_t *enemy)
     }
 
     game_object_t *player = ((enemy_components_t*)(enemy->private_components))->player;
+    // Collision detection
     if (enemy->position[0] - enemy->scale[0] * 0.5 < player->position[0] + player->scale[0] * 0.5&&
         enemy->position[0] + enemy->scale[0] * 0.5 > player->position[0] - player->scale[0] * 0.5)
     if (enemy->position[1] - enemy->scale[1] * 0.5 < player->position[1] + player->scale[1] * 0.5&&

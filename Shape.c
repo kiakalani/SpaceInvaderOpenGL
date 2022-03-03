@@ -28,7 +28,7 @@ shape_t *new_quad_shape()
     return s;
 }
 
-void use_shape(shape_t *shape, shader_t *shader)
+void use_shape(shape_t *shape)
 {
     glBindBuffer(GL_ARRAY_BUFFER, shape->vertex_buffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, shape->element_buffer);
